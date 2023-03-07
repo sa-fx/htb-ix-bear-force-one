@@ -8,6 +8,7 @@ The following libraries are required to run this code for any sensor:
 - SPI.h
 - WiFi_Link/WiFi.h
 - HTTPClient/HTTPClient.h
+Note that LiquidCrystal_I2C.h may complain about being incompatible with the hardware architechture of the ESP32. This warning can be ignored.
 
 The following libraries are required to run the code for a CO2 sensor:
 - CO2Sensor-master/CO2Sensor.h
