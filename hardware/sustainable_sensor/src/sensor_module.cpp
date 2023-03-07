@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "sensor_module.h"
 
 SensorModule::SensorModule(String sensor_type, String display_name)

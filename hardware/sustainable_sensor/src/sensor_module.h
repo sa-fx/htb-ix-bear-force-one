@@ -1,3 +1,13 @@
+/*
+  sensor_module.h - A library for implementing sensors used in
+  Bear-ly Sustainable.
+  Author: Stewart Alexander
+*/
+
+#ifndef sensor_module_h
+#define sensor_module_h
+
+#include "Arduino.h"
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
@@ -77,3 +87,5 @@ private:
   int sensor_value_;
   bool debug_flag_;
 };
+
+#endif
