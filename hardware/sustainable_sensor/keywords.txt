@@ -1,0 +1,21 @@
+#############################################
+# Syntax Coloring Map For Sustainable Sensors
+#############################################
+
+#############################################
+# Datatypes (KEYWORD1)
+#############################################
+
+SensorModule	KEYWORD1
+CO2Sensor       KEYWORD1
+PowerSensor     KEYWORD1
+TDSSensor       KEYWORD1
+VOCSensor       KEYWORD1
+
+#############################################
+# Methods and Functions (KEYWORD2)
+#############################################
+
+#############################################
+# Constants (LITERAL1)
+#############################################
