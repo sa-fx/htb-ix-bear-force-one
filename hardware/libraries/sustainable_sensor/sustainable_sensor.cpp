@@ -1,5 +1,6 @@
 #include "sustainable_sensor.h"
 
+// TODOLater: Ammend function based on getLocationInfo()
 SensorModule::SensorModule(String sensor_type, String display_name, String campus, String building, String room)
 {
   sensor_type_ = sensor_type;
@@ -157,5 +158,11 @@ void SensorModule::connectNetwork()
       sd_file_.close();
     }
   }
+  return;
+}
+
+// TODOLater: Implement function (Remember to make location variables private!)
+void getLocationInfo()
+{
   return;
 }

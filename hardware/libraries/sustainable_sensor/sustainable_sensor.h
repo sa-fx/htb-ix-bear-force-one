@@ -57,6 +57,12 @@ public:
    */
   void connectNetwork();
 
+  /**
+   * @brief Read the location info from the SD card and
+   *        assign to the appropriate variables
+   */
+  void getLocationInfo();
+
 private:
   String sensor_type_;
   String display_name_;
