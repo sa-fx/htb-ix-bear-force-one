@@ -1,4 +1,4 @@
-#include <sustainable_sensors.h>
+#include <sensor_module.h>
 #include "Adafruit_SGP40.h"
 #include "Adafruit_SHT31.h"
 

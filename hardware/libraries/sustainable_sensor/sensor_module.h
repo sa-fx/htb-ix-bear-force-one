@@ -6,8 +6,6 @@
 #include <HTTPClient.h>
 #include <network_info.h>
 
-#define DEBUG_FLAG false
-
 #define WARNING_BUZZER 5
 #define SD_PIN 10
 #define LOGS_FILE "logs.txt"
@@ -64,6 +62,12 @@ public:
    */
   void getLocationInfo();
 
+  /**
+   * @brief Read from the SD card if the module should run
+   *        in debug mode
+   */
+  void configureDebug();
+
 private:
   String sensor_type_;
   String display_name_;
@@ -71,4 +75,5 @@ private:
   String building_;
   String room_;
   int sensor_value_;
+  bool debug_flag_;
 };

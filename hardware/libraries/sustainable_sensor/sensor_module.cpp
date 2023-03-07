@@ -1,4 +1,4 @@
-#include "sustainable_sensor.h"
+#include "sensor_module.h"
 
 SensorModule::SensorModule(String sensor_type, String display_name)
 {
@@ -7,7 +7,9 @@ SensorModule::SensorModule(String sensor_type, String display_name)
 
   // Connect to local network
   connectNetwork();
+
   getLocationInfo();
+  configureDebug();
 
   display_.init();
   display_.backlight();
@@ -38,7 +40,7 @@ void SensorModule::displayValues(String message)
   display_.setCursor(5, 3);
   display_.print(network_states[network_state]);
 
-  if (DEBUG_FLAG)
+  if (debug_flag_)
   {
     Serial.print(display_name_);
     Serial.println(sensor_value_);
@@ -80,7 +82,7 @@ void SensorModule::processData()
     httpRequestData += sensor_value_;
     httpRequestData == "\"}";
     int http_code = http_.POST(httpRequestData);
-    if (DEBUG_FLAG)
+    if (debug_flag_)
     {
       Serial.println("HTTP POST Result: " + http_code);
     }
@@ -88,7 +90,7 @@ void SensorModule::processData()
   }
   else
   {
-    if (DEBUG_FLAG)
+    if (debug_flag_)
     {
       sd_file_ = startSD(LOGS_FILE);
       if (sd_file_ != NULL)
@@ -126,7 +128,7 @@ File SensorModule::startSD(String file_name)
 void SensorModule::connectNetwork()
 {
   int network_state = WiFi.begin(SSID, PASSWORD);
-  if (DEBUG_FLAG)
+  if (debug_flag_)
   {
     if (network_state == WL_CONNECTED)
     {
@@ -172,6 +174,33 @@ void getLocationInfo()
     campus_ = "NO_CAMPUS";
     building_ = "NO_BUILDING";
     room_ = "NO_ROOM";
+  }
+  return;
+}
+
+void configureDebug()
+{
+  sd_file_ = startSD(CONFIG_FILE);
+  if (sd_file_)
+  {
+    // TODOLater: Replace this line with read debug from SD file
+    debug_flag__ = false;
+    sd_file_.close();
+    if (debug_flag__)
+    {
+      Serial.begin(9600);
+      Serial.println("Debug begin");
+      sd_file_ = startSD(LOGS_FILE);
+      if (sd_file_)
+      {
+        sd_file_.println("Debug begin.");
+        sd_file_.close();
+      }
+    }
+  }
+  else
+  {
+    debug_flag__ = false;
   }
   return;
 }

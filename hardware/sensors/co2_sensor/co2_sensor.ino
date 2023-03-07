@@ -1,10 +1,6 @@
-#include <sustainable_sensor.h>
-#include <CO2Sensor.h>
+#include <co2_sensor.h>
 
 #define CO2_AIN A0
-
-#define CO2_INERTIAL_COEFF 0.99
-#define CO2_NUM_OF_READINGS 100
 
 // Define CO2 ppm values
 #define CO2_TOO_HIGH 3500
@@ -19,17 +15,6 @@ CO2Sensor co2Sensor(CO2_AIN, CO2_INERTIAL_COEFF, CO2_NUM_OF_READINGS);
 
 void setup()
 {
-  if (DEBUG_FLAG)
-  {
-    Serial.begin(9600);
-    Serial.println("Debug begin");
-    sd_file_ = co2.startSD(LOGS_FILE);
-    if (sd_file_)
-    {
-      sd_file_.println("Debug begin.");
-      sd_file_.close();
-    }
-  }
   pinMode(CO2_AIN, INPUT);
 }
 
