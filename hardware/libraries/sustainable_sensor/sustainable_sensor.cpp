@@ -1,16 +1,13 @@
 #include "sustainable_sensor.h"
 
-// TODOLater: Ammend function based on getLocationInfo()
-SensorModule::SensorModule(String sensor_type, String display_name, String campus, String building, String room)
+SensorModule::SensorModule(String sensor_type, String display_name)
 {
   sensor_type_ = sensor_type;
   display_name_ = display_name;
-  campus_ = campus;
-  building_ = building;
-  room_ = room;
 
   // Connect to local network
   connectNetwork();
+  getLocationInfo();
 
   display_.init();
   display_.backlight();
@@ -161,8 +158,20 @@ void SensorModule::connectNetwork()
   return;
 }
 
-// TODOLater: Implement function (Remember to make location variables private!)
+// TODOLater: Implement function
 void getLocationInfo()
 {
+  sd_file_ = startSD(CONFIG_FILE);
+  if (sd_file_)
+  {
+    // Read from SD card file
+    sd_file_.close();
+  }
+  else
+  {
+    campus_ = "NO_CAMPUS";
+    building_ = "NO_BUILDING";
+    room_ = "NO_ROOM";
+  }
   return;
 }

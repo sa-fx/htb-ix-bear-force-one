@@ -1,10 +1,6 @@
 #include <sustainable_sensor.h>
 #include <CO2Sensor.h>
 
-#define CAMPUS "CENTRAL"
-#define BUILDING "AT"
-#define ROOM "AT5.04"
-
 #define CO2_AIN A0
 
 #define CO2_INERTIAL_COEFF 0.99
@@ -18,7 +14,7 @@
 #define CO2_EXCELLENT 400
 
 // Initalise the CO2 sensor and its data collection instance
-SensorModule co2("CO2", "CO2 (ppm): ", CAMPUS, BUILDING, ROOM);
+SensorModule co2("CO2", "CO2 (ppm): ");
 CO2Sensor co2Sensor(CO2_AIN, CO2_INERTIAL_COEFF, CO2_NUM_OF_READINGS);
 
 void setup()
@@ -28,7 +24,8 @@ void setup()
     Serial.begin(9600);
     Serial.println("Debug begin");
     sd_file_ = co2.startSD(LOGS_FILE);
-    if(sd_file_){
+    if (sd_file_)
+    {
       sd_file_.println("Debug begin.");
       sd_file_.close();
     }
@@ -65,7 +62,8 @@ void loop()
     i = 4;
   }
   co2.displayValues(sensor_status[i]);
-  if(WiFi.status() != WL_CONNECTED){
+  if (WiFi.status() != WL_CONNECTED)
+  {
     co2.connectNetwork();
   }
   co2.processData();

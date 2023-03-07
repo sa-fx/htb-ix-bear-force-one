@@ -12,6 +12,7 @@
 #define SD_PIN 10
 #define LOGS_FILE "logs.txt"
 #define RESULTS_FILE "results.txt"
+#define CONFIG_FILE "config.txt"
 
 const String sensor_status[5] = {"Dangerous", "Bad", "Satisfactory", "Good", "Excellent"};
 const String network_states[7] = {"Idle", "SSID Not Found", "Scan Complete", "Connected", "Failed", "Lost", "Disconnected"};
@@ -29,7 +30,7 @@ static File sd_file_;
 class SensorModule
 {
 public:
-  SensorModule(String sensor_type, String display_name, String campus, String building, String room);
+  SensorModule(String sensor_type, String display_name);
 
   void setValue(int value);
 
