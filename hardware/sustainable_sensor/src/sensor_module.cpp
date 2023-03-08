@@ -97,12 +97,12 @@ void SensorModule::processData()
       if (sd_file_ != NULL)
       {
         sd_file_.print("Post unsuccessful. Network Status: ");
-        sd_file_.println(network_states[WiFi.status()]);
+        sd_file_.println(NETWORK_STATES[WiFi.status()]);
         sd_file_.close();
       }
 
       Serial.print("Post unsuccessful. Network Status: ");
-      Serial.println(network_states[WiFi.status()]);
+      Serial.println(NETWORK_STATES[WiFi.status()]);
     }
   }
   sd_file_ = startSD(RESULTS_FILE);
@@ -140,7 +140,7 @@ void SensorModule::connectNetwork()
     else
     {
       Serial.print("Network connection failed. Code: ");
-      Serial.println(network_states[network_state]);
+      Serial.println(NETWORK_STATES[network_state]);
     }
     sd_file_ = startSD(LOGS_FILE);
     if (sd_file_)
@@ -153,7 +153,7 @@ void SensorModule::connectNetwork()
       else
       {
         sd_file_.print("Network connection failed. Code: ");
-        sd_file_.println(network_states[network_state]);
+        sd_file_.println(NETWORK_STATES[network_state]);
       }
       sd_file_.close();
     }
@@ -185,9 +185,9 @@ void configureDebug()
   if (sd_file_)
   {
     // TODOLater: Replace this line with read debug from SD file
-    debug_flag__ = false;
+    debug_flag_ = false;
     sd_file_.close();
-    if (debug_flag__)
+    if (debug_flag_)
     {
       Serial.begin(9600);
       Serial.println("Debug begin");
@@ -201,7 +201,7 @@ void configureDebug()
   }
   else
   {
-    debug_flag__ = false;
+    debug_flag_ = false;
   }
   return;
 }

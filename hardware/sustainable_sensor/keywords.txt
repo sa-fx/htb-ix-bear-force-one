@@ -16,6 +16,36 @@ VOCSensor       KEYWORD1
 # Methods and Functions (KEYWORD2)
 #############################################
 
+setValue    KEYWORD2
+displayValues   KEYWORD2
+processData KEYWORD2
+startSD KEYWORD2
+connectNetwork  KEYWORD2
+getLocationInfo KEYWORD2
+configureDebug  KEYWORD2
+
+#############################################
+# Instances (KEYWORD2)
+#############################################
+
+client_ KEYWORD2
+http_   KEYWORD2
+local_ip_   KEYWORD2
+display_    KEYWORD2
+sd_file_    KEYWORD2
+
 #############################################
 # Constants (LITERAL1)
 #############################################
+WARNING_BUZZER  LITERAL1
+SD_PIN  LITERAL1
+LOGS_FILE   LITERAL1
+RESULTS_FILE    LITERAL1
+CONFIG_FILE LITERAL1
+
+SSID    LITERAL1
+PASSWORD    LITERAL1
+DATA_SERVER LITERAL1
+
+CO2_INERTIAL_COEFF  LITERAL1
+CO2_NUM_OF_READINGS LITERAL1

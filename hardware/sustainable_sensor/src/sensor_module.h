@@ -22,8 +22,8 @@
 #define RESULTS_FILE "results.txt"
 #define CONFIG_FILE "config.txt"
 
-const String sensor_status[5] = {"Dangerous", "Bad", "Satisfactory", "Good", "Excellent"};
-const String network_states[7] = {"Idle", "SSID Not Found", "Scan Complete", "Connected", "Failed", "Lost", "Disconnected"};
+const String SENSOR_STATUS[5] = {"Dangerous", "Bad", "Satisfactory", "Good", "Excellent"};
+const String NETWORK_STATES[7] = {"Idle", "SSID Not Found", "Scan Complete", "Connected", "Failed", "Lost", "Disconnected"};
 
 // Network objects
 static WiFiClient client_;
