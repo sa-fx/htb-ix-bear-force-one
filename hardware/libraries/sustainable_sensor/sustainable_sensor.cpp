@@ -161,10 +161,9 @@ void SensorModule::connectNetwork()
 // TODOLater: Implement function
 void getLocationInfo()
 {
-  sd_file_ = startSD(CONFIG_FILE);
+  sd_file_ = SD.open(CONFIG_FILE);
   if (sd_file_)
   {
-    // Read from SD card file
     sd_file_.close();
   }
   else
