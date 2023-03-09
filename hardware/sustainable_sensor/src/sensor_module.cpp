@@ -1,11 +1,8 @@
 #include "Arduino.h"
 #include "sensor_module.h"
 
-SensorModule::SensorModule(String sensor_type, String display_name)
+SensorModule::SensorModule()
 {
-  sensor_type_ = sensor_type;
-  display_name_ = display_name;
-
   // Connect to local network
   connectNetwork();
 
@@ -23,94 +20,25 @@ SensorModule::SensorModule(String sensor_type, String display_name)
   display_.print("Net: ");
 };
 
-void SensorModule::setValue(int value)
+void SensorModule::setSensorType(String sensor)
 {
-  sensor_value_ = value;
+  sensor_type_ = sensor;
   return;
 }
 
-void SensorModule::displayValues(String message)
+void SensorModule::setDisplayName(String name)
 {
-  int network_state = WiFi.status();
-  display_.setCursor(0, 1);
-  display_.print(display_name_);
-  display_.setCursor(11, 1);
-  display_.print(sensor_value_);
-  display_.setCursor(8, 2);
-  display_.print(message);
-  display_.setCursor(5, 3);
-  display_.print(network_states[network_state]);
-
-  if (debug_flag_)
-  {
-    Serial.print(display_name_);
-    Serial.println(sensor_value_);
-    Serial.print("Status: ");
-    Serial.println(message);
-    Serial.print("Current network state code: ");
-    Serial.println(network_state);
-    sd_file_ = startSD(LOGS_FILE);
-    if (sd_file_ != NULL)
-    {
-      sd_file_.print("Current network state code: ");
-      sd_file_.println(network_state);
-      sd_file_.close();
-    }
-  }
-  // Try to reconnect if not connected
-  if (network_state != WL_CONNECTED)
-  {
-    connectNetwork();
-  }
+  display_name_ = name;
   return;
 }
 
-void SensorModule::processData()
+void SensorModule::setValueLimits(int too_high, int very_high, int high, int okay, int excellent)
 {
-  if (WiFi.status() == WL_CONNECTED && client_.connected())
-  {
-    http_.begin(client_, DATA_SERVER);
-    http_.addHeader("Content-Type", "application/json");
-    String httpRequestData = "{\",\"key\":\"";
-    httpRequestData += sensor_type_;
-    httpRequestData += "\",\"campus\":\"";
-    httpRequestData += campus_;
-    httpRequestData += "\",\"location\":\"";
-    httpRequestData += building_;
-    httpRequestData += "-";
-    httpRequestData += room_;
-    httpRequestData += "\",\"data\":\"";
-    httpRequestData += sensor_value_;
-    httpRequestData == "\"}";
-    int http_code = http_.POST(httpRequestData);
-    if (debug_flag_)
-    {
-      Serial.println("HTTP POST Result: " + http_code);
-    }
-    http_.end();
-  }
-  else
-  {
-    if (debug_flag_)
-    {
-      sd_file_ = startSD(LOGS_FILE);
-      if (sd_file_ != NULL)
-      {
-        sd_file_.print("Post unsuccessful. Network Status: ");
-        sd_file_.println(NETWORK_STATES[WiFi.status()]);
-        sd_file_.close();
-      }
-
-      Serial.print("Post unsuccessful. Network Status: ");
-      Serial.println(NETWORK_STATES[WiFi.status()]);
-    }
-  }
-  sd_file_ = startSD(RESULTS_FILE);
-  if (sd_file_ != NULL)
-  {
-    sd_file_.println(sensor_value_);
-    sd_file_.close();
-  }
+  value_very_high = too_high;
+  value_very_high = very_high;
+  value_high = high;
+  value_okay = okay;
+  value_excellent = excellent;
   return;
 }
 
@@ -162,7 +90,7 @@ void SensorModule::connectNetwork()
 }
 
 // TODOLater: Implement function
-void getLocationInfo()
+void SensorModule::getLocationInfo()
 {
   sd_file_ = startSD(CONFIG_FILE);
   if (sd_file_)
@@ -179,7 +107,7 @@ void getLocationInfo()
   return;
 }
 
-void configureDebug()
+void SensorModule::configureDebug()
 {
   sd_file_ = startSD(CONFIG_FILE);
   if (sd_file_)
@@ -202,6 +130,127 @@ void configureDebug()
   else
   {
     debug_flag_ = false;
+  }
+  return;
+}
+
+void SensorModule::setValue(int value)
+{
+  sensor_value_ = value;
+  return;
+}
+
+int SensorModule::processData()
+{
+  int status;
+  if (sensor_value_ >= value_too_high)
+  {
+    status = 0;
+    digitalWrite(WARNING_BUZZER, HIGH);
+    delay(250);
+    digitalWrite(WARNING_BUZZER, LOW);
+  }
+  else if (sensor_value_ >= value_very_high)
+  {
+    status = 1;
+  }
+  else if (sensor_value_ >= value_high)
+  {
+    status = 2;
+  }
+  else if (sensor_value_ >= value_okay)
+  {
+    status = 3;
+  }
+  else
+  {
+    status = 4;
+  }
+  return status;
+}
+
+void SensorModule::displayValues()
+{
+  String message = SENSOR_STATUS[processData()];
+  int network_state = WiFi.status();
+  display_.setCursor(0, 1);
+  display_.print(display_name_);
+  display_.setCursor(11, 1);
+  display_.print(sensor_value_);
+  display_.setCursor(8, 2);
+  display_.print(message);
+  display_.setCursor(5, 3);
+  display_.print(NETWORK_STATES[network_state]);
+
+  if (debug_flag_)
+  {
+    Serial.print(display_name_);
+    Serial.println(sensor_value_);
+    Serial.print("Status: ");
+    Serial.println(message);
+    Serial.print("Current network state code: ");
+    Serial.println(network_state);
+    sd_file_ = startSD(LOGS_FILE);
+    if (sd_file_ != NULL)
+    {
+      sd_file_.print("Current network state code: ");
+      sd_file_.println(network_state);
+      sd_file_.close();
+    }
+  }
+  // Try to reconnect if not connected
+  if (network_state != WL_CONNECTED)
+  {
+    connectNetwork();
+  }
+  return;
+}
+
+void SensorModule::uploadData()
+{
+  if (WiFi.status() == WL_CONNECTED && client_.connected())
+  {
+    http_.begin(client_, DATA_SERVER);
+    http_.addHeader("Content-Type", "application/json");
+    String httpRequestData = "{\",\"key\":\"";
+    httpRequestData += sensor_type_;
+    httpRequestData += "\",\"campus\":\"";
+    httpRequestData += campus_;
+    httpRequestData += "\",\"location\":\"";
+    httpRequestData += building_;
+    httpRequestData += "-";
+    httpRequestData += room_;
+    httpRequestData += "\",\"data\":\"";
+    httpRequestData += sensor_value_;
+    httpRequestData == "\"}";
+    int http_code = http_.POST(httpRequestData);
+    if (debug_flag_)
+    {
+      Serial.println("HTTP POST Result: " + http_code);
+    }
+    http_.end();
+  }
+  else
+  {
+    if (debug_flag_)
+    {
+      sd_file_ = startSD(LOGS_FILE);
+      if (sd_file_ != NULL)
+      {
+        sd_file_.print("Post unsuccessful. Network Status: ");
+        sd_file_.println(NETWORK_STATES[WiFi.status()]);
+        sd_file_.close();
+      }
+
+      Serial.print("Post unsuccessful. Network Status: ");
+      Serial.println(NETWORK_STATES[WiFi.status()]);
+    }
+  }
+  sd_file_ = startSD(RESULTS_FILE);
+  if (sd_file_ != NULL)
+  {
+    sd_file_.println(sensor_value_);
+    sd_file_.close();
   }
   return;
 }

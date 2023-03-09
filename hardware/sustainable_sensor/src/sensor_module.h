@@ -22,6 +22,7 @@
 #define RESULTS_FILE "results.txt"
 #define CONFIG_FILE "config.txt"
 
+// Text for printing to the LCD Display
 const String SENSOR_STATUS[5] = {"Dangerous", "Bad", "Satisfactory", "Good", "Excellent"};
 const String NETWORK_STATES[7] = {"Idle", "SSID Not Found", "Scan Complete", "Connected", "Failed", "Lost", "Disconnected"};
 
@@ -38,20 +39,11 @@ static File sd_file_;
 class SensorModule
 {
 public:
-  SensorModule(String sensor_type, String display_name);
+  SensorModule();
 
-  void setValue(int value);
-
-  /**
-   * @brief Print module info to the LCD display
-   */
-  void displayValues(String message);
-
-  /**
-   * @brief Send module data to the data server
-   *        via HTTP/POST
-   */
-  void processData();
+  void setSensorType(String sensor);
+  void setDisplayName(String name);
+  void setValueLimits(int too_high, int very_high, int high, int okay, int excellent);
 
   /**
    * @brief   Open the SD card and start writting to a file
@@ -78,6 +70,26 @@ public:
    */
   void configureDebug();
 
+  void setValue(int value);
+
+  /**
+   * @brief   Use safety levels (pre-defined) to determine if
+   *          sensor measurement is safe, unsafe, or dangerous
+   * @return  Value referring to safety level (0-4)
+   */
+  int processData();
+
+  /**
+   * @brief Print module info to the LCD display
+   */
+  void displayValues();
+
+  /**
+   * @brief Send module data to the data server
+   *        via HTTP/POST
+   */
+  void uploadData();
+
 private:
   String sensor_type_;
   String display_name_;
@@ -86,6 +98,11 @@ private:
   String room_;
   int sensor_value_;
   bool debug_flag_;
+  int value_too_high;
+  int value_very_high;
+  int value_high;
+  int value_okay;
+  int value_excellent;
 };
 
 #endif

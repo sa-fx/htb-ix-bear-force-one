@@ -3,6 +3,6 @@
 #include "Adafruit_SHT31.h"
 
 // TODOLater: Implement class
-class VocSensor : public SensorModule
+class VocModule : public SensorModule
 {
-}
+};
