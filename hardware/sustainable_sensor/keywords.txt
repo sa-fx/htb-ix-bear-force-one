@@ -7,22 +7,28 @@
 #############################################
 
 SensorModule	KEYWORD1
-CO2Sensor       KEYWORD1
-PowerSensor     KEYWORD1
-TDSSensor       KEYWORD1
-VOCSensor       KEYWORD1
+CO2Module       KEYWORD1
+PowerModule     KEYWORD1
+TDSModule       KEYWORD1
+VOCModule       KEYWORD1
 
 #############################################
 # Methods and Functions (KEYWORD2)
 #############################################
 
-setValue    KEYWORD2
-displayValues   KEYWORD2
-processData KEYWORD2
+setSensorType   KEYWORD2
+setDisplayName  KEYWORD2
+setValueLimits  KEYWORD2
 startSD KEYWORD2
 connectNetwork  KEYWORD2
 getLocationInfo KEYWORD2
 configureDebug  KEYWORD2
+setValue    KEYWORD2
+processData KEYWORD2
+displayValues   KEYWORD2
+uploadData  KEYWORD2
+
+read    KEYWORD2
 
 #############################################
 # Instances (KEYWORD2)
@@ -47,5 +53,10 @@ SSID    LITERAL1
 PASSWORD    LITERAL1
 DATA_SERVER LITERAL1
 
+CO2_TOO_HIGH    LITERAL1
+CO2_VERY_HIGH   LITERAL1
+CO2_HIGH    LITERAL1
+CO2_OKAY    LITERAL1
+CO2_EXCELLENT   LITERAL1
 CO2_INERTIAL_COEFF  LITERAL1
 CO2_NUM_OF_READINGS LITERAL1
