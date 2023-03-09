@@ -1,6 +1,4 @@
-#include <sustainable_sensor.h>
-#include "Adafruit_SGP40.h"
-#include "Adafruit_SHT31.h"
+#include <voc_sensor.h>
 
 // Define VOC Index values
 #define VOC_TOO_HIGH 400
@@ -18,17 +16,6 @@ SensorModule voc("VOC", "VOC Index: ");
 
 void setup()
 {
-  if (DEBUG_FLAG)
-  {
-    Serial.begin(9600);
-    Serial.println("Debug begin");
-    sd_file_ = voc.startSD(LOGS_FILE);
-    if (sd_file_)
-    {
-      sd_file_.println("Debug begin.");
-      sd_file_.close();
-    }
-  }
 }
 
 void loop()
