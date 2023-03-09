@@ -158,19 +158,22 @@ void SensorModule::connectNetwork()
   return;
 }
 
-// TODOLater: Implement function
+// TODOLater: Test function with hardware
 void getLocationInfo()
 {
   sd_file_ = SD.open(CONFIG_FILE);
   if (sd_file_)
   {
+    getline(((char)sd_file_.read()), campus_, '\n');
+    getline(((char)sd_file_.read()), building_, '\n');
+    getline(((char)sd_file_.read()), room_, '\n');
     sd_file_.close();
   }
   else
   {
-    campus_ = "NO_CAMPUS";
-    building_ = "NO_BUILDING";
-    room_ = "NO_ROOM";
+    campus_ = "CAMPUS";
+    building_ = "BUILDING";
+    room_ = "ROOM";
   }
   return;
 }
