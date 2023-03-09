@@ -2,10 +2,6 @@
 #include "Adafruit_SGP40.h"
 #include "Adafruit_SHT31.h"
 
-#define CAMPUS "KB"
-#define BUILDING "FJ"
-#define ROOM "TLB"
-
 // Define VOC Index values
 #define VOC_TOO_HIGH 400
 #define VOC_VERY_HIGH 300
@@ -18,7 +14,7 @@ Adafruit_SGP40 sgp;
 Adafruit_SHT31 sht31;
 uint16_t sraw;
 int32_t voc_index;
-SensorModule voc("VOC", "VOC Index: ", CAMPUS, BUILDING, ROOM);
+SensorModule voc("VOC", "VOC Index: ");
 
 void setup()
 {
@@ -27,7 +23,8 @@ void setup()
     Serial.begin(9600);
     Serial.println("Debug begin");
     sd_file_ = voc.startSD(LOGS_FILE);
-    if(sd_file_){
+    if (sd_file_)
+    {
       sd_file_.println("Debug begin.");
       sd_file_.close();
     }
@@ -65,7 +62,8 @@ void loop()
     i = 4;
   }
   voc.displayValues(sensor_status[i]);
-  if(WiFi.status() != WL_CONNECTED){
+  if (WiFi.status() != WL_CONNECTED)
+  {
     voc.connectNetwork();
   }
   voc.processData();

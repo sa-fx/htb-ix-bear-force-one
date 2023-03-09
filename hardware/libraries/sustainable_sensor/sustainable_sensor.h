@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
@@ -12,6 +14,7 @@
 #define SD_PIN 10
 #define LOGS_FILE "logs.txt"
 #define RESULTS_FILE "results.txt"
+#define CONFIG_FILE "config.txt"
 
 const String sensor_status[5] = {"Dangerous", "Bad", "Satisfactory", "Good", "Excellent"};
 const String network_states[7] = {"Idle", "SSID Not Found", "Scan Complete", "Connected", "Failed", "Lost", "Disconnected"};
@@ -29,7 +32,7 @@ static File sd_file_;
 class SensorModule
 {
 public:
-  SensorModule(String sensor_type, String display_name, String campus, String building, String room);
+  SensorModule(String sensor_type, String display_name);
 
   void setValue(int value);
 
@@ -56,6 +59,12 @@ public:
    *        network_info.h
    */
   void connectNetwork();
+
+  /**
+   * @brief Read the location info from the SD card and
+   *        assign to the appropriate variables
+   */
+  void getLocationInfo();
 
 private:
   String sensor_type_;

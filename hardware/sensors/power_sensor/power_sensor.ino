@@ -1,9 +1,5 @@
 #include <sustainable_sensor.h>
 
-#define CAMPUS "CENTRAL"
-#define BUILDING "TEVIOT_ROW_HOUSE"
-#define ROOM "NEW_AMPHION"
-
 #define POWER_AIN A0
 
 // Define power values
@@ -14,7 +10,7 @@
 #define POWER_EXCELLENT 0
 
 // Initalise the power sensor data collection instance
-SensorModule power("POWER", "Power (W): ", CAMPUS, BUILDING, ROOM);
+SensorModule power("POWER", "Power (W): ");
 
 void setup()
 {
@@ -23,7 +19,8 @@ void setup()
     Serial.begin(9600);
     Serial.println("Debug begin");
     sd_file_ = power.startSD(LOGS_FILE);
-    if(sd_file_){
+    if (sd_file_)
+    {
       sd_file_.println("Debug begin.");
       sd_file_.close();
     }
@@ -60,7 +57,8 @@ void loop()
     i = 4;
   }
   power.displayValues(sensor_status[i]);
-  if(WiFi.status() != WL_CONNECTED){
+  if (WiFi.status() != WL_CONNECTED)
+  {
     power.connectNetwork();
   }
   power.processData();
