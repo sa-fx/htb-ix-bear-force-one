@@ -1,6 +1,6 @@
 // Original source code: https://wiki.keyestudio.com/KS0429_keyestudio_TDS_Meter_V1.0#Test_Code
 
-#include <sustainable_sensor.h>
+#include <tds_sensor.h>
 
 #define TDS_AIN A0
 #define VREF 5.0  // analog reference voltage(Volt) of the ADC
@@ -27,17 +27,6 @@ SensorModule tds("TDS", "TDS (ppm): ");
 
 void setup()
 {
-  if (DEBUG_FLAG)
-  {
-    Serial.begin(9600);
-    Serial.println("Debug begin");
-    sd_file_ = tds.startSD(LOGS_FILE);
-    if (sd_file_)
-    {
-      sd_file_.println("Debug begin.");
-      sd_file_.close();
-    }
-  }
   pinMode(TDS_AIN, INPUT);
 }
 

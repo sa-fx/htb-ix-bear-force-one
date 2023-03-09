@@ -1,4 +1,4 @@
-#include <sustainable_sensor.h>
+#include <power_sensor.h>
 
 #define POWER_AIN A0
 
@@ -14,17 +14,6 @@ SensorModule power("POWER", "Power (W): ");
 
 void setup()
 {
-  if (DEBUG_FLAG)
-  {
-    Serial.begin(9600);
-    Serial.println("Debug begin");
-    sd_file_ = power.startSD(LOGS_FILE);
-    if (sd_file_)
-    {
-      sd_file_.println("Debug begin.");
-      sd_file_.close();
-    }
-  }
   pinMode(POWER_AIN, INPUT);
 }
 
