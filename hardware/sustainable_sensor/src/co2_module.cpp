@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "co2_module.h"
 
 CO2Module::CO2Module(int input_pin)
@@ -7,6 +6,7 @@ CO2Module::CO2Module(int input_pin)
     setDisplayName("CO2 (ppm): ");
     CO2Sensor co2(input_pin, CO2_INERTIAL_COEFF, CO2_NUM_OF_READINGS);
     setValueLimits(CO2_TOO_HIGH, CO2_VERY_HIGH, CO2_HIGH, CO2_OKAY, CO2_EXCELLENT);
+    value_excellent = CO2_EXCELLENT;
     pinMode(input_pin, INPUT);
 }
 

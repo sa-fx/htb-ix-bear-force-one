@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "sensor_module.h"
 
 SensorModule::SensorModule()
@@ -206,51 +205,52 @@ void SensorModule::displayValues()
   return;
 }
 
+// TODOLater: Fix the network implementations for pushing data
 void SensorModule::uploadData()
 {
-  if (WiFi.status() == WL_CONNECTED && client_.connected())
-  {
-    http_.begin(client_, DATA_SERVER);
-    http_.addHeader("Content-Type", "application/json");
-    String httpRequestData = "{\",\"key\":\"";
-    httpRequestData += sensor_type_;
-    httpRequestData += "\",\"campus\":\"";
-    httpRequestData += campus_;
-    httpRequestData += "\",\"location\":\"";
-    httpRequestData += building_;
-    httpRequestData += "-";
-    httpRequestData += room_;
-    httpRequestData += "\",\"data\":\"";
-    httpRequestData += sensor_value_;
-    httpRequestData == "\"}";
-    int http_code = http_.POST(httpRequestData);
-    if (debug_flag_)
-    {
-      Serial.println("HTTP POST Result: " + http_code);
-    }
-    http_.end();
-  }
-  else
-  {
-    if (debug_flag_)
-    {
-      sd_file_ = startSD(LOGS_FILE);
-      if (sd_file_ != NULL)
-      {
-        sd_file_.print("Post unsuccessful. Network Status: ");
-        sd_file_.println(NETWORK_STATES[WiFi.status()]);
-        sd_file_.close();
-      }
+  // if (WiFi.status() == WL_CONNECTED && client_.connected())
+  // {
+  //   http_.begin(client_, DATA_SERVER);
+  //   http_.addHeader("Content-Type", "application/json");
+  //   String httpRequestData = "{\",\"key\":\"";
+  //   httpRequestData += sensor_type_;
+  //   httpRequestData += "\",\"campus\":\"";
+  //   httpRequestData += campus_;
+  //   httpRequestData += "\",\"location\":\"";
+  //   httpRequestData += building_;
+  //   httpRequestData += "-";
+  //   httpRequestData += room_;
+  //   httpRequestData += "\",\"data\":\"";
+  //   httpRequestData += sensor_value_;
+  //   httpRequestData == "\"}";
+  //   int http_code = http_.POST(httpRequestData);
+  //   if (debug_flag_)
+  //   {
+  //     Serial.println("HTTP POST Result: " + http_code);
+  //   }
+  //   http_.end();
+  // }
+  // else
+  // {
+  //   if (debug_flag_)
+  //   {
+  //     sd_file_ = startSD(LOGS_FILE);
+  //     if (sd_file_ != NULL)
+  //     {
+  //       sd_file_.print("Post unsuccessful. Network Status: ");
+  //       sd_file_.println(NETWORK_STATES[WiFi.status()]);
+  //       sd_file_.close();
+  //     }
 
-      Serial.print("Post unsuccessful. Network Status: ");
-      Serial.println(NETWORK_STATES[WiFi.status()]);
-    }
-  }
-  sd_file_ = startSD(RESULTS_FILE);
-  if (sd_file_ != NULL)
-  {
-    sd_file_.println(sensor_value_);
-    sd_file_.close();
-  }
+  //     Serial.print("Post unsuccessful. Network Status: ");
+  //     Serial.println(NETWORK_STATES[WiFi.status()]);
+  //   }
+  // }
+  // sd_file_ = startSD(RESULTS_FILE);
+  // if (sd_file_ != NULL)
+  // {
+  //   sd_file_.println(sensor_value_);
+  //   sd_file_.close();
+  // }
   return;
 }

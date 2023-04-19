@@ -1,9 +1,4 @@
-#include <co2_module.h>
-#include <network_info.h>
-#include <power_module.h>
-#include <sensor_module.h>
-#include <tds_module.h>
-#include <voc_module.h>
+#include <sustainable_sensors.h>
 
 #define CO2_AIN A0
 

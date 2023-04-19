@@ -1,9 +1,3 @@
-/*
-  sensor_module.h - A library for implementing sensors used in
-  Bear-ly Sustainable.
-  Author: Stewart Alexander
-*/
-
 #ifndef sensor_module_h
 #define sensor_module_h
 
@@ -13,7 +7,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <WiFi.h>
-#include <HTTPClient.h>
+#include <ArduinoHttpClient.h>
 #include <network_info.h>
 
 #define WARNING_BUZZER 5
@@ -28,8 +22,8 @@ const String NETWORK_STATES[7] = {"Idle", "SSID Not Found", "Scan Complete", "Co
 
 // Network objects
 static WiFiClient client_;
-static HTTPClient http_;
 static IPAddress local_ip_;
+// static HttpClient http_;
 
 // Set display address, and display dimensions
 static LiquidCrystal_I2C display_(0x27, 20, 4);
@@ -40,6 +34,12 @@ class SensorModule
 {
 public:
   SensorModule();
+
+  /**
+   * @brief Read data from sensor - Implementation dependent
+   *        on sensor in question
+   */
+  virtual void read() = 0;
 
   void setSensorType(String sensor);
   void setDisplayName(String name);
@@ -90,7 +90,7 @@ public:
    */
   void uploadData();
 
-private:
+protected:
   String sensor_type_;
   String display_name_;
   String campus_;

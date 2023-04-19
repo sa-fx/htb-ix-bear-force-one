@@ -6,6 +6,7 @@ class CO2Module : public SensorModule
 public:
     CO2Module(int input_pin);
     ~CO2Module();
+
     void read();
 
 private:
