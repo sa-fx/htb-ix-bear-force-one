@@ -5,10 +5,6 @@
 ![contributors_badge](https://img.shields.io/github/contributors/davidbeechey/htb-ix-bear-force-one)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/sa-fx/htb-ix-bear-force-one)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/sa-fx/htb-ix-bear-force-one)
-![aws](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
-![typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
-![arduino](https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white)
 
 
 ### Overview
