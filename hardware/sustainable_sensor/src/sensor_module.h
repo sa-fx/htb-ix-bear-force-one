@@ -8,7 +8,7 @@
 #include <SD.h>
 #include <WiFi.h>
 #include <ArduinoHttpClient.h>
-#include <network_info.h>
+#include <sensor_secrets.h>
 
 #define WARNING_BUZZER 5
 #define SD_PIN 10

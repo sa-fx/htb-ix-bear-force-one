@@ -16,7 +16,7 @@
 #include <ArduinoHttpClient.h>
 
 #include "sensor_module.h"
-#include "network_info.h"
+#include "sensor_secrets.h"
 #include "co2_module.h"
 #include "power_module.h"
 #include "tds_module.h"

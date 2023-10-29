@@ -4,13 +4,13 @@ SensorModule::SensorModule()
 {
   // Connect to local network
   connectNetwork();
-
+  // Read config from SD file
   getLocationInfo();
   configureDebug();
 
+  // Initialise LCD display
   display_.init();
   display_.backlight();
-
   display_.setCursor(0, 0);
   display_.print("Sustainability Meter");
   display_.setCursor(0, 2);
@@ -55,35 +55,16 @@ File SensorModule::startSD(String file_name)
 
 void SensorModule::connectNetwork()
 {
-  int network_state = WiFi.begin(SSID, PASSWORD);
   if (debug_flag_)
   {
-    if (network_state == WL_CONNECTED)
-    {
-      local_ip_ = WiFi.localIP();
-      Serial.print("Network connection established! Address: ");
-      Serial.println(local_ip_);
-    }
-    else
-    {
-      Serial.print("Network connection failed. Code: ");
-      Serial.println(NETWORK_STATES[network_state]);
-    }
-    sd_file_ = startSD(LOGS_FILE);
-    if (sd_file_)
-    {
-      if (network_state == WL_CONNECTED)
-      {
-        sd_file_.print("Network connection established! Address: ");
-        sd_file_.println(local_ip_);
-      }
-      else
-      {
-        sd_file_.print("Network connection failed. Code: ");
-        sd_file_.println(NETWORK_STATES[network_state]);
-      }
-      sd_file_.close();
-    }
+    Serial.println("Attempting to connect to SSID");
+  }
+  status = WiFi.begin(SSID, PASSWORD);
+  // Wait 10 seconds to allow connection
+  if (debug_flag_)
+  {
+    Serial.println(WiFi.status());
+    sd.
   }
   return;
 }
@@ -94,7 +75,7 @@ void SensorModule::getLocationInfo()
   sd_file_ = startSD(CONFIG_FILE);
   if (sd_file_)
   {
-    // Read from SD card file
+    // TODOLater: Read from SD card file
     sd_file_.close();
   }
   else
@@ -117,18 +98,27 @@ void SensorModule::configureDebug()
     if (debug_flag_)
     {
       Serial.begin(9600);
-      Serial.println("Debug begin");
-      sd_file_ = startSD(LOGS_FILE);
-      if (sd_file_)
-      {
-        sd_file_.println("Debug begin.");
-        sd_file_.close();
-      }
+      writeDebugInfo("Debug begin.");
     }
   }
   else
   {
     debug_flag_ = false;
+  }
+  return;
+}
+
+void writeDebugInfo(String debug_message_)
+{
+  if (debug_flag_)
+  {
+    Serial.println((String)millis() + debug_message_);
+    sd_file_ = startSD(LOGS_FILE);
+    if (sd_file_)
+    {
+      sd_file_.println((String)millis() + debug_message_);
+      sd_file_.close();
+    }
   }
   return;
 }
@@ -181,22 +171,6 @@ void SensorModule::displayValues()
   display_.setCursor(5, 3);
   display_.print(NETWORK_STATES[network_state]);
 
-  if (debug_flag_)
-  {
-    Serial.print(display_name_);
-    Serial.println(sensor_value_);
-    Serial.print("Status: ");
-    Serial.println(message);
-    Serial.print("Current network state code: ");
-    Serial.println(network_state);
-    sd_file_ = startSD(LOGS_FILE);
-    if (sd_file_ != NULL)
-    {
-      sd_file_.print("Current network state code: ");
-      sd_file_.println(network_state);
-      sd_file_.close();
-    }
-  }
   // Try to reconnect if not connected
   if (network_state != WL_CONNECTED)
   {
@@ -205,52 +179,54 @@ void SensorModule::displayValues()
   return;
 }
 
-// TODOLater: Fix the network implementations for pushing data
 void SensorModule::uploadData()
 {
-  // if (WiFi.status() == WL_CONNECTED && client_.connected())
-  // {
-  //   http_.begin(client_, DATA_SERVER);
-  //   http_.addHeader("Content-Type", "application/json");
-  //   String httpRequestData = "{\",\"key\":\"";
-  //   httpRequestData += sensor_type_;
-  //   httpRequestData += "\",\"campus\":\"";
-  //   httpRequestData += campus_;
-  //   httpRequestData += "\",\"location\":\"";
-  //   httpRequestData += building_;
-  //   httpRequestData += "-";
-  //   httpRequestData += room_;
-  //   httpRequestData += "\",\"data\":\"";
-  //   httpRequestData += sensor_value_;
-  //   httpRequestData == "\"}";
-  //   int http_code = http_.POST(httpRequestData);
-  //   if (debug_flag_)
-  //   {
-  //     Serial.println("HTTP POST Result: " + http_code);
-  //   }
-  //   http_.end();
-  // }
-  // else
-  // {
-  //   if (debug_flag_)
-  //   {
-  //     sd_file_ = startSD(LOGS_FILE);
-  //     if (sd_file_ != NULL)
-  //     {
-  //       sd_file_.print("Post unsuccessful. Network Status: ");
-  //       sd_file_.println(NETWORK_STATES[WiFi.status()]);
-  //       sd_file_.close();
-  //     }
+  // Set up HTTP frame for sending
+  String httpQueryData = "{\",\"key\":\"";
+  httpRequestData += sensor_type_;
+  httpRequestData += "\",\"campus\":\"";
+  httpRequestData += campus_;
+  httpRequestData += "\",\"location\":\"";
+  httpRequestData += building_;
+  httpRequestData += "-";
+  httpRequestData += room_;
+  httpRequestData += "\",\"data\":\"";
+  httpRequestData += sensor_value_;
+  httpRequestData == "\"}";
+  // Close any open connections before sending a new request
+  client_.stop();
+  writeDebugInfo("Attempting to connect to server...");
+  // From Arduino WiFi example code
+  if (client_.connect(DATA_SERVER, SERVER_PORT))
+  {
+    client_.println("POST " + DATA_PATH + "HTTP/1.1");
+    client_.println("Host: " + DATA_SERVER);
+    client_.println("User-Agent: ArduinoWiFi/1.1");
+    client_.println("Connection: close");
+    client_.println();
 
-  //     Serial.print("Post unsuccessful. Network Status: ");
-  //     Serial.println(NETWORK_STATES[WiFi.status()]);
-  //   }
-  // }
-  // sd_file_ = startSD(RESULTS_FILE);
-  // if (sd_file_ != NULL)
-  // {
-  //   sd_file_.println(sensor_value_);
-  //   sd_file_.close();
-  // }
+    client_.println(httpQueryData);
+  }
+  // Report debug info
+  if (debug_flag_)
+  {
+    // Report to SD file
+    sd_file_ = startSD(LOGS_FILE);
+    if (sd_file_ != NULL)
+    {
+      sd_file_.print("Post unsuccessful. Network Status: ");
+      sd_file_.println(NETWORK_STATES[WiFi.status()]);
+      sd_file_.close();
+    }
+    // Report to serial
+    Serial.print("Post unsuccessful. Network Status: ");
+    Serial.println(NETWORK_STATES[WiFi.status()]);
+  }
+  sd_file_ = startSD(RESULTS_FILE);
+  if (sd_file_ != NULL)
+  {
+    sd_file_.println(sensor_value_);
+    sd_file_.close();
+  }
   return;
 }
