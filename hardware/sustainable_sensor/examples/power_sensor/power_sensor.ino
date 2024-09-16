@@ -1,55 +1,29 @@
-#include <power_sensor.h>
+/*
+    This example code implements a "Power" Sensor Module. The PowerModule class
+    is not based on any specific sensor and therefore can be used as a dummy sensor
+    to test the surrounding hardware of the Sensor Module, such as the LCD and Wi-Fi
+    support, by implementing a simple "sensor" that reads from an analogue input pin.
+*/
+
+#include <power_module.h>
 
 #define POWER_AIN A0
 
-// Define power values
-#define POWER_TOO_HIGH 400
-#define POWER_VERY_HIGH 300
-#define POWER_HIGH 200
-#define POWER_OKAY 100
-#define POWER_EXCELLENT 0
-
 // Initalise the power sensor data collection instance
-SensorModule power("POWER", "Power (W): ");
+PowerModule power(POWER_AIN);
 
 void setup()
 {
-  pinMode(POWER_AIN, INPUT);
 }
 
 void loop()
 {
-  int power_reading = analogRead(POWER_AIN);
-  int i;
-  power.setValue(power_reading);
-  if (power_reading >= POWER_TOO_HIGH)
-  {
-    i = 0;
-    digitalWrite(WARNING_BUZZER, HIGH);
-    delay(250);
-    digitalWrite(WARNING_BUZZER, LOW);
-  }
-  else if (power_reading >= POWER_VERY_HIGH)
-  {
-    i = 1;
-  }
-  else if (power_reading >= POWER_HIGH)
-  {
-    i = 2;
-  }
-  else if (power_reading >= POWER_OKAY)
-  {
-    i = 3;
-  }
-  else
-  {
-    i = 4;
-  }
-  power.displayValues(sensor_status[i]);
+  power.read();
+  power.displayValues();
   if (WiFi.status() != WL_CONNECTED)
   {
     power.connectNetwork();
   }
-  power.processData();
+  power.uploadData();
   delay(1000);
 }
